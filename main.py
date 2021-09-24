@@ -5,6 +5,8 @@ import getpass
 import pwd
 
 SERVER_NAME = "DEVI"
+AUTHOR = 'ANURAG ROY'
+AUTH_MAIL = 'anurag_roy@iitkgp.ac.in'
 
 class Mailer(object):
     def __init__(self, server_addr, from_addr, username, password):
@@ -61,10 +63,12 @@ def owner(pid):
 
 def find_and_send():
     global SERVER_NAME
+    global AUTHOR
+    global AUTH_MAIL
     password =getpass.getpass()
     user_info_dict = get_user_info_dict()
-    from_addr = 'anurag_roy@iitkgp.ac.in'
-    mailer = Mailer('iitkgpmail.iitkgp.ac.in:587', from_addr, from_addr, password)
+
+    mailer = Mailer('iitkgpmail.iitkgp.ac.in:587', AUTH_MAIL, AUTH_MAIL, password)
     mailer.connect()
     for i in range(Device.count()):
         device = Device(i)
@@ -76,7 +80,8 @@ def find_and_send():
                     name, mail_id = user_info_dict[uname]
                 except:
                     continue
-                message = "Dear {name}, \n \n Please kill idle process with id {pid} occupying GPU {gpuid} and make gpu memory free for others \n\n\n Thanks and regards, \n Anurag Roy".format(name=name, pid=pid, gpuid=i)
+                message = "Dear {name}, \n \n Please kill idle process with id {pid} occupying GPU {gpuid} and make gpu memory free for others"\
+                    " \n\n\n Thanks and regards, \n {author}".format(name=name, pid=pid, gpuid=i, author=AUTHOR)
                 subject = "KILL IDLE GPU PROCESS in {}".format(SERVER_NAME)
                 print("SENT TO {uname} {name} {mail_id} {pid}".format(uname=uname, name=name, mail_id=mail_id, pid=pid))
                 mailer.send_msg(mail_id, subject, message)
